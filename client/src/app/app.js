@@ -3,6 +3,7 @@ angular.module('app', [
   'home',
   'dashboard',
   'projects',
+  'venues',
   'admin',
   'services.breadcrumbs',
   'services.i18nNotifications',
@@ -14,7 +15,7 @@ angular.module('app', [
 
 angular.module('app').constant('MONGOLAB_CONFIG', {
   baseUrl: '/databases/',
-  dbName: 'vygis_angular_app'
+  dbName: 'exhibition-finder'
 });
 
 //TODO: move those messages to a separate module

@@ -1,0 +1,14 @@
+<table class="table table-bordered table-condensed table-striped table-hover">
+    <thead>
+    <tr>
+        <th class="span3">Name</th>
+        <th class="span5">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="project in projects">
+        <td ng-click="viewVenue(project)">{{project.name}}</td>
+        <td>{{project.desc}}</td>
+    </tr>
+    </tbody>
+</table>
