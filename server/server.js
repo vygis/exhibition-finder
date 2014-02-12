@@ -1,12 +1,14 @@
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
+
 var privateKey  = fs.readFileSync(__dirname + '/cert/privatekey.pem').toString();
 var certificate = fs.readFileSync(__dirname + '/cert/certificate.pem').toString();
 var credentials = {key: privateKey, cert: certificate};
 
 var express = require('express');
 var mongoProxy = require('./lib/mongo-proxy');
+var mongoose = require('mongoose');
 var config = require('./config.js');
 var passport = require('passport');
 var security = require('./lib/security');
@@ -18,6 +20,9 @@ var app = express();
 var secureServer = https.createServer(credentials, app);
 var server = http.createServer(app);
 
+//Bootstrap db connection
+var db = mongoose.connect(config.db);
+
 require('./lib/routes/static').addRoutes(app, config);
 
 app.use(protectJSON);
@@ -28,7 +33,7 @@ app.use(express.cookieParser(config.server.cookieSecret));  // Hash cookies with
 app.use(express.cookieSession());                           // Store the session in the (secret) cookie
 app.use(passport.initialize());                             // Initialize PassportJS
 app.use(passport.session());                                // Use Passport's session authentication strategy - this stores the logged in user in the session and will now run on any request
-app.use(xsrf);                                            // Add XSRF checks to the request
+    app.use(xsrf);                                          // Add XSRF checks to the request
 security.initialize(config.mongo.dbUrl, config.mongo.apiKey, config.security.dbName, config.security.usersCollection); // Add a Mongo strategy for handling the authentication
 
 app.use(function(req, res, next) {
@@ -40,6 +45,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+/*mongolab proxy*/
 app.namespace('/databases/:db/collections/:collection*', function() {
   app.all('/', function(req, res, next) {
     if ( req.method !== 'GET' ) {
@@ -59,6 +65,17 @@ app.namespace('/databases/:db/collections/:collection*', function() {
   // Proxy database calls to the MongoDB
   app.all('/', mongoProxy(config.mongo.dbUrl, config.mongo.apiKey));
 });
+
+/*bootstrap mongoose models*/
+
+
+
+
+
+
+
+
+
 
 require('./lib/routes/security').addRoutes(app, security);
 require('./lib/routes/appFile').addRoutes(app, config);

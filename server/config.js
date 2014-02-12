@@ -9,6 +9,7 @@ module.exports = {
     dbName: 'exhibition-finder',                        // The name of database that contains the security information
     usersCollection: 'users'                            // The name of the collection contains user information
   },
+  db: 'mongodb://localhost/mean',
   server: {
     listenPort: 3001,                                   // The port on which the server is to listen (means that the app is at http://localhost:3000 for instance)
     securePort: 8434,                                   // The HTTPS port on which the server is to listen (means that the app is at https://localhost:8433 for instance)

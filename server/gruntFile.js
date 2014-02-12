@@ -2,8 +2,7 @@
 
 module.exports = function(grunt) {
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   // Project configuration.
   grunt.initConfig({
@@ -11,6 +10,14 @@ module.exports = function(grunt) {
     watch: {
       files: '<config:lint.files>',
       tasks: 'default timestamp'
+    },
+    shell: {
+      mongod: {
+          command: 'mongod'
+      },
+      server: {
+          command: 'node server.js'
+      }
     },
     jshint: {
       files: ['gruntFile.js', 'server.js', 'lib/*.js', 'test/**/*.js'],
@@ -27,18 +34,31 @@ module.exports = function(grunt) {
         eqnull: true,
         globals: { require: false, __dirname: false, console: false, module: false, exports: false }
       }
+    },
+
+    concurrent: {
+      options: {
+          logConcurrentOutput: true
+      },
+      tasks: ['shell:mongod', 'shell:server']
+
     }
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint','nodeunit']);
+
+  grunt.registerTask('default', ['launch']);
+
+  grunt.registerTask('launch', ['concurrent']);
+
+  grunt.registerTask('build', ['jshint','nodeunit']);
 
   grunt.registerTask('timestamp', function() {
     grunt.log.subhead(Date());
   });
 
-  grunt.registerTask('supervise', function() {
-    this.async();
-    require('supervisor').run(['server.js']);
-  });
+//  grunt.registerTask('supervise', function() {
+//    this.async();
+//    require('supervisor').run(['server.js']);
+//  });
 };
