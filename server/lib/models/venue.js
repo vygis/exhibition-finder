@@ -44,9 +44,9 @@ var VenueSchema = new Schema({
 /**
  * Validations
  */
-VenueSchema.path('title').validate(function(title) {
-    return title.length;
-}, 'Title cannot be blank');
+VenueSchema.path('name').validate(function(name) {
+    return name.length;
+}, 'Name cannot be blank');
 
 /**
  * Statics

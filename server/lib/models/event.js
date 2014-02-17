@@ -44,9 +44,9 @@ var EventSchema = new Schema({
 /**
  * Validations
  */
-EventSchema.path('title').validate(function(title) {
-    return title.length;
-}, 'Title cannot be blank');
+EventSchema.path('name').validate(function(name) {
+    return name.length;
+}, 'Name cannot be blank');
 
 /**
  * Statics
