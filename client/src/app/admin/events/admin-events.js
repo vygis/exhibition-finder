@@ -7,22 +7,22 @@ angular.module('admin-events', [
 
     .config(['crudRouteProvider', 'securityAuthorizationProvider', function (crudRouteProvider, securityAuthorizationProvider) {
 
-        var getAllUsers = ['Events', 'Users', '$route', function(Events, Users, $route){
+        var getAllUsers = ['EventResource', 'Users', '$route', function(EventResource, Users, $route){
             return Users.all();
         }];
 
         crudRouteProvider.routesFor('Events', 'admin')
             .whenList({
-                events: ['Events', function(Events) { return Events.all(); }],
+                events: ['EventResource', function(EventResource) { return EventResource.all(); }],
                 adminUser: securityAuthorizationProvider.requireAdminUser
             })
             .whenNew({
-                event: ['Events', function(Events) { return new Events(); }],
+                event: ['EventResource', function(EventResource) { return new EventResource(); }],
                 users: getAllUsers,
                 adminUser: securityAuthorizationProvider.requireAdminUser
             })
             .whenEdit({
-                event: ['Events', 'Users', '$route', function(Events, Users, $route) { return Events.getById($route.current.params.itemId); }],
+                event: ['EventResource', 'Users', '$route', function(EventResource, Users, $route) { return EventResource.getById($route.current.params.itemId); }],
                 users: getAllUsers,
                 adminUser: securityAuthorizationProvider.requireAdminUser
             });

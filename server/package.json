@@ -10,7 +10,8 @@
     "express-namespace": "~0.1.1",
     "open": "0.0.3",
     "request": "~2.16.6",
-    "mongoose": "3.8.7"
+    "mongoose": "3.8.7",
+    "underscore": "latest"
   },
   "devDependencies": {
     "matchdep": "~0.1.2",

@@ -1,5 +1,5 @@
 angular.module('resources.events', ['mongolabResource']);
-angular.module('resources.events').factory('Events', ['mongolabResource', function ($mongolabResource) {
+angular.module('resources.events').factory('EventResource', ['mongolabResource', function ($mongolabResource) {
 
     var Events = $mongolabResource('events');
 

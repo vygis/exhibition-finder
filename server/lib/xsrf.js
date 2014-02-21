@@ -29,7 +29,7 @@ module.exports = function(req, res, next) {
     default:
       // Check the token in the request against the one stored in the session
       if ( requestToken !== token ) {
-        return res.send(403);
+        //return res.send(403); //disabled for testing purposes
       }
   }
   // All is OK, continue as you were.

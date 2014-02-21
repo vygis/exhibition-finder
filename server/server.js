@@ -33,7 +33,7 @@ app.use(express.cookieParser(config.server.cookieSecret));  // Hash cookies with
 app.use(express.cookieSession());                           // Store the session in the (secret) cookie
 app.use(passport.initialize());                             // Initialize PassportJS
 app.use(passport.session());                                // Use Passport's session authentication strategy - this stores the logged in user in the session and will now run on any request
-    app.use(xsrf);                                          // Add XSRF checks to the request
+app.use(xsrf);                                              // Add XSRF checks to the request
 security.initialize(config.mongo.dbUrl, config.mongo.apiKey, config.security.dbName, config.security.usersCollection); // Add a Mongo strategy for handling the authentication
 
 app.use(function(req, res, next) {
@@ -66,24 +66,25 @@ app.namespace('/databases/:db/collections/:collection*', function() {
   app.all('/', mongoProxy(config.mongo.dbUrl, config.mongo.apiKey));
 });
 
-/*bootstrap mongoose models*/
 
-var models_path = __dirname + '/lib/models';
-var walk = function(path) {
+
+
+
+/*bootstrap mongoose models and routes */
+
+(function addModelRoutes(path) {
     fs.readdirSync(path).forEach(function(file) {
         var newPath = path + '/' + file;
         var stat = fs.statSync(newPath);
         if (stat.isFile()) {
             if (/(.*)\.(js$|coffee$)/.test(file)) {
-                require(newPath);
+                require(newPath).addRoutes(app);
             }
         } else if (stat.isDirectory()) {
-            walk(newPath);
+            arguments.addModelRoutes(newPath);
         }
     });
-};
-walk(models_path);
-
+})(__dirname + '/lib/routes/models');
 
 
 
