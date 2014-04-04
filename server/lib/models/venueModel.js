@@ -2,11 +2,12 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    modelName = "venue";
 
 
 /**
- * Article Schema
+ * Venue Schema
  */
 var VenueSchema = new Schema({
     creationDate: {
@@ -27,18 +28,18 @@ var VenueSchema = new Schema({
         default: '',
         trim: true
     },
-    creator: {
+//    creator: {
+//        type: Schema.ObjectId,
+//        ref: 'User'
+//    },
+//    modifier: {
+//        type: Schema.ObjectId,
+//        ref: 'User'
+//    },
+    events: [{
         type: Schema.ObjectId,
-        ref: 'User'
-    },
-    modifier: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-    venues: {
-        type: Schema.ObjectId,
-        ref: 'Venue'
-    }
+        ref: 'Event'
+    }]
 });
 
 /**
@@ -55,10 +56,15 @@ VenueSchema.statics = {
     load: function(id, cb) {
         this.findOne({
             _id: id
-        }).populate('creator', 'name username')
-        .populate('modifier', 'name username')
-        .exec(cb);
+        })//.populate('creator', 'name username')
+            //.populate('modifier', 'name username')
+            .populate('events', 'name')
+            .exec(cb);
     }
 };
 
-mongoose.model('Venue', VenueSchema);
+var venueModel = mongoose.model('Venue', VenueSchema);
+
+exports.addModel = function (modelObject) {
+    modelObject[modelName] = venueModel;
+};

@@ -1,13 +1,17 @@
 /**
  * Module dependencies.
  */
+
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    _ = require('underscore'),
+    modelName = 'event';
 
 
 /**
- * Article Schema
+ * Event Schema
  */
+
 var EventSchema = new Schema({
     creationDate: {
         type: Date,
@@ -26,19 +30,19 @@ var EventSchema = new Schema({
         type: String,
         default: '',
         trim: true
-    },
-    creator: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-    modifier: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-    venues: {
+    },/*
+     creator: {
+     type: Schema.ObjectId,
+     ref: 'User'
+     },
+     modifier: {
+     type: Schema.ObjectId,
+     ref: 'User'
+     },*/
+    venues: [{
         type: Schema.ObjectId,
         ref: 'Venue'
-    }
+    }]
 });
 
 /**
@@ -51,14 +55,21 @@ EventSchema.path('name').validate(function(name) {
 /**
  * Statics
  */
+
 EventSchema.statics = {
     load: function(id, cb) {
         this.findOne({
             _id: id
-        }).populate('creator', 'name username')
-            .populate('modifier', 'name username')
+        })
+//            .populate('creator', 'name username')
+//            .populate('modifier', 'name username')
+            .populate('venues', 'name')
             .exec(cb);
     }
 };
 
-mongoose.model('Event', EventSchema);
+var eventModel = mongoose.model('Event', EventSchema);
+
+exports.addModel = function (modelObject) {
+    modelObject[modelName] = eventModel
+ };

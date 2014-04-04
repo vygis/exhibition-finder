@@ -72,23 +72,50 @@ app.namespace('/databases/:db/collections/:collection*', function() {
 
 /*bootstrap mongoose models and routes */
 
-(function addModelRoutes(path) {
+//(function addModelRoutes(path) {
+//    fs.readdirSync(path).forEach(function(file) {
+//        var newPath = path + '/' + file;
+//        var stat = fs.statSync(newPath);
+//        if (stat.isFile()) {
+//            if (/(.*)\.(js$|coffee$)/.test(file)) {
+//                require(newPath).addRoutes(app);
+//            }
+//        } else if (stat.isDirectory()) {
+//            arguments.addModelRoutes(newPath);
+//        }
+//    });
+//})(__dirname + '/lib/routes/models');
+
+
+var models = {};
+
+(function addModels(path, modelObject) {
     fs.readdirSync(path).forEach(function(file) {
         var newPath = path + '/' + file;
         var stat = fs.statSync(newPath);
         if (stat.isFile()) {
             if (/(.*)\.(js$|coffee$)/.test(file)) {
-                require(newPath).addRoutes(app);
+                require(newPath).addModel(modelObject);
             }
         } else if (stat.isDirectory()) {
-            arguments.addModelRoutes(newPath);
+            arguments.addModels(newPath, modelObject);
         }
     });
-})(__dirname + '/lib/routes/models');
+})(__dirname + '/lib/models', models);
 
-
-
-
+(function addRestRoutes(path, app, modelObject) {
+    fs.readdirSync(path).forEach(function(file) {
+        var newPath = path + '/' + file;
+        var stat = fs.statSync(newPath);
+        if (stat.isFile()) {
+            if (/(.*)\.(js$|coffee$)/.test(file)) {
+                require(newPath).addRoutes(app, modelObject);
+            }
+        } else if (stat.isDirectory()) {
+            arguments.addRestRoutes(newPath, app, modelObject);
+        }
+    });
+})(__dirname + '/lib/routes/rest', app, models);
 
 
 
@@ -101,8 +128,8 @@ app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 // Start up the server on the port specified in the config
 server.listen(config.server.listenPort, '0.0.0.0', 511, function() {
   // // Once the server is listening we automatically open up a browser
-  var open = require('open');
-  open('http://localhost:' + config.server.listenPort + '/');
+  //var open = require('open');
+  //open('http://localhost:' + config.server.listenPort + '/');
 });
 console.log('Angular App Server - listening on port: ' + config.server.listenPort);
 secureServer.listen(config.server.securePort);
