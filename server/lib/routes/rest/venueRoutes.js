@@ -1,28 +1,32 @@
 var createMethods = function (models) {
     var venueModel = models.venue,
+        eventModel = models.event,
         methods = {
-            getById: function(req, res, next, id) {
-                venueModel.load(id, function(err, venue) {
+            getById: function (req, res, next, id) {
+                venueModel.load(id, function (err, venue) {
                     if (err) return next(err);
                     if (!venue) return next(new Error('Failed to load venue ' + id));
                     req.venue = venue;
                     next();
                 });
             },
-            show: function(req, res) {
-                res.jsonp(req.venue);
+            show: function (req, res) {
+                var venue = req.venue;
+                eventModel.loadLinkedToVenue(venue._id, function (err, events) {
+                    if (err) {
+                        res.render('error', {
+                            status: 500
+                        });
+                    };
+                    venue.events = events;
+                    res.jsonp(venue);
+                })
+
             },
-            create: function(req, res) {
-                var venueData = req.body;
-//        venueData.events = venueData.events || [];
-//        var eventIds = ["5339bb5b8959555c0df4ea12", "5339bb9c8959555c0df4ea13"]; //testEvent
-//        eventIds.forEach(function (event) {
-//            venueData.events.push(event);
-//        });
-                var venue = new venueModel(venueData);
-                //var venue = new venueModel({name:"test venue", description:"test description"});
+            create: function (req, res) {
+                var venue = new venueModel(req.body);
                 //venue.user = req.user || {name: "vygis", username: "vygintas"}; //TODO find out where the user is coming from
-                venue.save(function(err) {
+                venue.save(function (err) {
                     if (err) {
                         res.render('error', {
                             status: 500
@@ -32,13 +36,12 @@ var createMethods = function (models) {
                     }
                 });
             },
-            update: function(req, res) {
+            update: function (req, res) {
                 var venue = req.venue;
-                var eventId2 = "5339bb9c8959555c0df4ea13"; //testEvent
 
                 venue = _.extend(venue, req.body);
 
-                venue.save(function(err) {
+                venue.save(function (err) {
                     if (err) {
                         res.render('error', {
                             status: 500
@@ -48,10 +51,10 @@ var createMethods = function (models) {
                     }
                 });
             },
-            delete: function(req, res) {
+            delete: function (req, res) {
                 var venue = req.venue;
 
-                venue.remove(function(err) {
+                venue.remove(function (err) {
                     if (err) {
                         res.render('error', {
                             status: 500
@@ -61,8 +64,8 @@ var createMethods = function (models) {
                     }
                 });
             },
-            all: function(req, res) {
-                venueModel.find().sort('-created').populate('creator', 'name username').exec(function(err, venues) {
+            all: function (req, res) {
+                venueModel.find().sort('-created').populate('creator', 'name username').exec(function (err, venues) {
                     if (err) {
                         res.render('error', {
                             status: 500

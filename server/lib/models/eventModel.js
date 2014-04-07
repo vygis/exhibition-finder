@@ -30,7 +30,7 @@ var EventSchema = new Schema({
         type: String,
         default: '',
         trim: true
-    },/*
+    }, /*
      creator: {
      type: Schema.ObjectId,
      ref: 'User'
@@ -39,16 +39,18 @@ var EventSchema = new Schema({
      type: Schema.ObjectId,
      ref: 'User'
      },*/
-    venues: [{
-        type: Schema.ObjectId,
-        ref: 'Venue'
-    }]
+    venues: [
+        {
+            type: Schema.ObjectId,
+            ref: 'Venue'
+        }
+    ]
 });
 
 /**
  * Validations
  */
-EventSchema.path('name').validate(function(name) {
+EventSchema.path('name').validate(function (name) {
     return name.length;
 }, 'Name cannot be blank');
 
@@ -57,14 +59,18 @@ EventSchema.path('name').validate(function(name) {
  */
 
 EventSchema.statics = {
-    load: function(id, cb) {
+    load: function (id, cb) {
         this.findOne({
             _id: id
         })
-//            .populate('creator', 'name username')
-//            .populate('modifier', 'name username')
             .populate('venues', 'name')
             .exec(cb);
+    },
+    loadLinkedToVenue: function (venueId, cb) {
+        this.find({ venues: venueId })
+            .exec(function (err, events) {
+                cb(err, events);
+            })
     }
 };
 
@@ -72,4 +78,4 @@ var eventModel = mongoose.model('Event', EventSchema);
 
 exports.addModel = function (modelObject) {
     modelObject[modelName] = eventModel
- };
+};
