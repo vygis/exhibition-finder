@@ -6,9 +6,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="event in events" ng-click="edit(event.$id())">
+    <tr ng-repeat="event in events" ng-click="edit(event._id)">
         <td>{{event.name}}</td>
-        <td>{{event.desc}}</td>
+        <td>{{event.description}}</td>
     </tr>
     </tbody>
 </table>

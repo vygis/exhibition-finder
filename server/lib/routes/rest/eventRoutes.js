@@ -15,7 +15,8 @@ var createMethods = function (models) {
             create: function(req, res) {
                 var event = new eventModel(req.body);
                 //event.user = req.user || {name: "vygis", username: "vygintas"}; //TODO find out where the user is coming from
-                event.venues.push(venueId);
+                //var venueId = "533da7411a43f180028f0c94"; //saatchi
+                //event.venues.push(venueId);
                 event.save(function(err) {
                     if (err) {
                         res.render('error', {

@@ -1,12 +1,7 @@
-angular.module('resources.events', ['mongolabResource']);
-angular.module('resources.events').factory('EventResource', ['mongolabResource', function ($mongolabResource) {
+angular.module('resources.events', ['mongooseResource']);
+angular.module('resources.events').factory('EventResource', ['mongooseResource', function (mongooseResource) {
 
-    var Events = $mongolabResource('events');
-
-    Events.forUser = function(userId, successcb, errorcb) {
-        //TODO: get events for this user only (!)
-        return Events.query({}, successcb, errorcb);
-    };
+    var Events = mongooseResource('events');
 
     return Events;
 }]);
