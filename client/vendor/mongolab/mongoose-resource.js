@@ -62,12 +62,10 @@ angular.module('mongooseResource', []).factory('mongooseResource', ['MONGOOSE_CO
             return Resource.query({_id:{$in:qin}}, successcb, errorcb);
         };
 
-        //instance methods
+        //instance methods work
 
         Resource.prototype.$id = function () {
-            if (this._id && this._id.$oid) {
-                return this._id.$oid;
-            }
+            return this._id || undefined;
         };
 
         Resource.prototype.$save = function (successcb, errorcb) {

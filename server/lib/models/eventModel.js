@@ -63,7 +63,7 @@ EventSchema.statics = {
         this.findOne({
             _id: id
         })
-            .populate('venues', 'name')
+            //.populate('venues', '_id name')
             .exec(cb);
     },
     loadLinkedToVenue: function (venueId, cb) {

@@ -1,7 +1,7 @@
-angular.module('resources.venues', ['mongolabResource']);
-angular.module('resources.venues').factory('Venues', ['mongolabResource', function ($mongolabResource) {
+angular.module('resources.venues', ['mongooseResource']);
+angular.module('resources.venues').factory('Venues', ['mongooseResource', function ($mongooseResource) {
 
-    var Venues = $mongolabResource('venues');
+    var Venues = $mongooseResource('venues');
 
 
 
