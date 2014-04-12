@@ -47,6 +47,7 @@ module.exports = function (grunt) {
         common: ['src/common/**/*.tpl.html']
       },
       less: ['src/less/stylesheet.less'], // recess:build doesn't accept ** in its file patterns
+      css: ['src/css/*.css'],
       lessWatch: ['src/less/**/*.less']
     },
     clean: ['<%= distdir %>/*'],
@@ -92,6 +93,10 @@ module.exports = function (grunt) {
           process: true
         }
       },
+      css: {
+        src:['<%= src.css %>'],
+        dest: '<%= distdir %>/custom.css'
+        },
       angular: {
         src:['vendor/angular/angular.js', 'vendor/angular/angular-route.js'],
         dest: '<%= distdir %>/angular.js'
@@ -154,11 +159,11 @@ module.exports = function (grunt) {
     },
     watch:{
       all: {
-        files:['<%= src.js %>', '<%= src.specs %>', '<%= src.lessWatch %>', '<%= src.tpl.app %>', '<%= src.tpl.common %>', '<%= src.html %>'],
+        files:['<%= src.js %>', '<%= src.specs %>', '<%= src.lessWatch %>', '<%= src.css %>', '<%= src.tpl.app %>', '<%= src.tpl.common %>', '<%= src.html %>'],
         tasks:['default','timestamp']
       },
       build: {
-        files:['<%= src.js %>', '<%= src.specs %>', '<%= src.lessWatch %>', '<%= src.tpl.app %>', '<%= src.tpl.common %>', '<%= src.html %>'],
+        files:['<%= src.js %>', '<%= src.specs %>', '<%= src.lessWatch %>', '<%= src.css %>', '<%= src.tpl.app %>', '<%= src.tpl.common %>', '<%= src.html %>'],
         tasks:['build','timestamp']
       }
     },

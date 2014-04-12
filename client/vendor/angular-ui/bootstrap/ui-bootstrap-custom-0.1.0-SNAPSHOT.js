@@ -19,6 +19,7 @@ dialogModule.provider("$dialog", function(){
 	var defaults = {
 		backdrop: true,
 		modalClass: 'modal',
+        modalSubClasses: ['modal-dialog', 'modal-content'],
 		backdropClass: 'modal-backdrop',
     transitionClass: 'fade',
     triggerClass: 'in',
@@ -73,6 +74,14 @@ dialogModule.provider("$dialog", function(){
       }
 
       this.modalEl = createElement(options.modalClass);
+      this.templateWrapperEl = this.modalEl;
+      if(options.modalSubClasses) { //need to wrap the modal class with several more divs for Bootstrap 3
+          angular.forEach(options.modalSubClasses, function (clazz) {
+              var subEl = createElement(clazz);
+              self.templateWrapperEl.append(subEl);
+              self.templateWrapperEl = subEl;
+          });
+      }
       if(options.modalFade){
         this.modalEl.addClass(options.transitionClass);
         this.modalEl.removeClass(options.triggerClass);
@@ -117,7 +126,7 @@ dialogModule.provider("$dialog", function(){
       this._loadResolves().then(function(locals) {
         var $scope = locals.$scope = self.$scope = $rootScope.$new();
 
-        self.modalEl.html(locals.$template);
+        self.templateWrapperEl.html(locals.$template);
 
         if (self.options.controller) {
           var ctrl = $controller(self.options.controller, locals);
