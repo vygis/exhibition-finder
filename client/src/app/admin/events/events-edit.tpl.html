@@ -13,11 +13,7 @@
                     </textarea>
                 </div>
             </div>
-            <div class="col-xs-6" ng-if="event.venues">
-                <div class="list-group">
-                    <a href="#" class="list-group-item active">Venue{{event.venues.length !== 1 ? 's' : ''}}</a>
-                    <a href="#" class="list-group-item" ng-repeat="venue in event.venues">{{venue.name}}</a>
-                </div>
+            <div class="col-xs-6" crud-linked-items label="Venues" parent="event" children="event.venues">
             </div>
         </div>
         <div class="row">
